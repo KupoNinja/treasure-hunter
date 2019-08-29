@@ -96,7 +96,27 @@ namespace TreasureHunter
 
         public void CaptureUserInput()
         {
+            string userInput = Console.ReadLine().ToLower();
+            string[] words = userInput.Split(' ');
+            string command = words[0];
+            string option = "";
 
+            if (words.Length > 1)
+            {
+                option = words[1];
+            }
+            // switch (command)
+            // {
+            //     case "":
+
+            //         break;
+            //     case "":
+
+            //         break;
+            //     default:
+            //         Console.WriteLine("Invalid option");
+            //         break;
+            // }
         }
 
         public void ChangeLocation()

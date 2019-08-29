@@ -12,7 +12,7 @@ namespace TreasureHunter.Interfaces
         void DisplayMenu(); //Display valid commands that your user might enter (eg., 'look', 'take <itemName>')
         void CaptureUserInput(); //NOTE String.Split(<char>), string command and option, and your switch statement
         void DisplayRoomDescription(); //NOTE the logic to run when the user enters 'look'
-        void ChangeLocation(); //NOTE the logic to run when the user enters 'go <locationName>' or 'enter <locationName>' (whatever you decide you command word is)
+        void ChangeLocation(string locationName); //NOTE the logic to run when the user enters 'go <locationName>' or 'enter <locationName>' (whatever you decide you command word is)
         void TakeItem(); //NOTE the logic to run when the user enters 'take <itemName>'
         //to take an item you must find the target item in the Location's Items and if it exists remove it from the Location's Items and add to the Player's Inventory. 
         void DisplayPlayerInventory(); //NOTE the logic to run when the user enters 'inventory'

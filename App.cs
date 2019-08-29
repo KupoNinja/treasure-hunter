@@ -33,7 +33,6 @@ namespace TreasureHunter
             Console.WriteLine("");
             Console.WriteLine("Press any key to start or Ctrl+C to exit.");
             Console.ReadKey();
-            Greeting();
         }
 
         private static void Typewrite(string message)
@@ -49,8 +48,9 @@ namespace TreasureHunter
         public void Greeting()
         {
             // NOTE Add delays and "sound effects"
-            Typewrite("WAKE UP!! GET UP!!! ");
-            Typewrite("GET ON YOUR FEET NOW!!!\n");
+            Console.Clear();
+            // Typewrite("WAKE UP!! GET UP!!! ");
+            // Typewrite("GET ON YOUR FEET NOW!!!\n");
             Console.WriteLine("You slowly gain consciousness and your blurred vision starts to focus as you groggily look around. You see dead crew members strewn about the room.");
             Console.WriteLine("Sparks fly from various consoles.");
             Console.WriteLine("The ringing in your ears starts to lessen and is replaced by the ship's AI repeating -\n");
@@ -62,7 +62,7 @@ namespace TreasureHunter
             Player player = new Player(name);
 
             Console.WriteLine(player.Name);
-            Console.ReadLine();
+            // return;
         }
 
         public void Setup()
@@ -88,6 +88,7 @@ namespace TreasureHunter
 
         public void Run()
         {
+            Greeting();
             while (Playing)
             {
                 DisplayMenu();
@@ -96,6 +97,8 @@ namespace TreasureHunter
 
         public void CaptureUserInput()
         {
+            Console.WriteLine("Type 'help' to display list of commands.");
+            Console.Write("What do you do: ");
             string userInput = Console.ReadLine().ToLower();
             string[] words = userInput.Split(' ');
             string command = words[0];
@@ -105,21 +108,33 @@ namespace TreasureHunter
             {
                 option = words[1];
             }
-            // switch (command)
-            // {
-            //     case "":
-
-            //         break;
-            //     case "":
-
-            //         break;
-            //     default:
-            //         Console.WriteLine("Invalid option");
-            //         break;
-            // }
+            switch (command)
+            {
+                case "look":
+                    DisplayRoomDescription();
+                    break;
+                case "go":
+                    ChangeLocation(option);
+                    break;
+                case "inventory":
+                    DisplayPlayerInventory();
+                    break;
+                case "help":
+                    DisplayHelpInfo();
+                    break;
+                case "quit":
+                    // NOTE Maybe set up a quit "cutscene"
+                    Console.WriteLine("Bye " + Player.Name);
+                    Console.ReadKey();
+                    Playing = false;
+                    break;
+                default:
+                    Console.WriteLine("Invalid option");
+                    break;
+            }
         }
 
-        public void ChangeLocation()
+        public void ChangeLocation(string locationName)
         {
 
         }
@@ -141,7 +156,8 @@ namespace TreasureHunter
 
         public void DisplayMenu()
         {
-
+            CaptureUserInput();
+            return;
         }
 
         public void DisplayPlayerInventory()

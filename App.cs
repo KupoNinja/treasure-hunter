@@ -63,6 +63,7 @@ namespace TreasureHunter
         public void Setup()
         {
             // NOTE Implement others after you finish requirements.
+            // TODO Change the Descriptions to the scenario.
             Boundary cafeteria = new Boundary("Cafeteria", "Where crew members can relax, socialize, and eat meals specially made by the lovable chef.");
             Boundary hallway = new Boundary("Hallway", "Connects the different rooms and provides access to the hololift.");
             Boundary engineering = new Boundary("Engineering", "Holds the drive core and controls for energy that powers the ship.");
@@ -70,15 +71,20 @@ namespace TreasureHunter
             // Boundary hololift = new Boundary("Hololift", "Used to move to different levels of the ship.");
 
             Item torch = new Item("Anti-Matter Torch", "Used to splice tools or cut through heavy metals.");
-            // Item nylocloth = new Item("Nylocloth", "Durable yet flexible material. Used often for clothing.");
+            Item nylocloth = new Item("Nylocloth", "Durable yet flexible material. Used often for clothing.");
             // Item chlorogen = new Item("Chlorogen", "Extremely potent anesthesia. Most commonly used in medical procedures. Use caution due to potency.");
-            // Item eek = new Item("Rapid-firing blaster.", "Nicknamed 'Eek' due to the high-pitched 'Eee' sound it makes when you hold down the trigger.");
+            Item eek = new Item("Equalizer", "Rapid-firing blaster. Nicknamed 'Eek' due to the high-pitched 'Eee' sound it makes when you hold down the trigger.");
 
             cafeteria.AddNeighborBoundary(hallway);
             hallway.AddNeighborBoundary(engineering);
             hallway.AddNeighborBoundary(escape);
 
             engineering.Items.Add(torch);
+
+            Player.Inventory.Add(nylocloth);
+            Player.Inventory.Add(eek);
+
+            Location = cafeteria;
         }
 
         public void Run()
@@ -131,7 +137,9 @@ namespace TreasureHunter
 
         public void ChangeLocation(string locationName)
         {
-
+            // NOTE Start here
+            // Boundary destination = (Boundary)locationName;
+            // Location = locationName;
         }
 
         public void DisplayHelpInfo()
@@ -142,7 +150,7 @@ namespace TreasureHunter
             Console.WriteLine("-Type the below commands to progress through the game.");
             Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("'Look' - Displays room description.\n");
-            Console.WriteLine("'Go <Direction>' - Moves you to an adjacent room.\n");
+            Console.WriteLine("'Go <Location>' - Moves you to your desired location.\n");
             Console.WriteLine("'Take <ItemName>' - Adds the item to your inventory.\n");
             Console.WriteLine("'Inventory' - Displays a list of your inventory.\n");
             Console.WriteLine("'Help' - Displays the list of commands.\n");
@@ -160,12 +168,24 @@ namespace TreasureHunter
 
         public void DisplayPlayerInventory()
         {
-
+            // NOTE Bummer... Really want to use this...
+            // Player.Inventory.ForEach(Console.WriteLine);
+            Console.Clear();
+            Console.WriteLine("================================================================================\n");
+            foreach (var item in Player.Inventory)
+            {
+                Console.WriteLine($"{item.Name} - {item.Description}\n");
+            }
+            Console.WriteLine("");
+            Console.WriteLine("================================================================================\n");
+            // NOTE Can set to be able to use items later on.
+            Console.WriteLine("Press enter to go back.");
+            Console.ReadLine();
         }
 
         public void DisplayRoomDescription()
         {
-
+            Console.WriteLine(Location.Description);
         }
 
         public void TakeItem()

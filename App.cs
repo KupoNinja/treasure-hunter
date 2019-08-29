@@ -57,12 +57,7 @@ namespace TreasureHunter
             Typewrite("\"Ship is in critical condition. Hostile life forms on board. Please head to the escape pods.\"");
 
             // NOTE Think of a better scenario to ask name.
-            Console.WriteLine("What is your name?");
-            string name = Console.ReadLine();
-            Player player = new Player(name);
-
-            Console.WriteLine(player.Name);
-            // return;
+            Player.GetPlayerName();
         }
 
         public void Setup()
@@ -142,7 +137,10 @@ namespace TreasureHunter
         public void DisplayHelpInfo()
         {
             Console.Clear();
-            Console.WriteLine("-Type the below commands to progress through the game.\n");
+            Console.WriteLine("The goal of the game is to get to the escape pods and escape the exploding ship.");
+            Console.WriteLine("================================================================================\n");
+            Console.WriteLine("-Type the below commands to progress through the game.");
+            Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("'Look' - Displays room description.\n");
             Console.WriteLine("'Go <Direction>' - Moves you to an adjacent room.\n");
             Console.WriteLine("'Take <ItemName>' - Adds the item to your inventory.\n");
@@ -177,6 +175,7 @@ namespace TreasureHunter
 
         public App()
         {
+            Player = new Player();
             Playing = true;
         }
     }

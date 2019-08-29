@@ -8,6 +8,7 @@ namespace TreasureHunter
         {
             App app = new App();
             app.DisplayTitle();
+            app.Setup();
             app.Greeting();
             app.Run();
             // app.DisplayHelpInfo();

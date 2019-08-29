@@ -67,7 +67,23 @@ namespace TreasureHunter
 
         public void Setup()
         {
+            // NOTE Implement others after you finish requirements.
+            Boundary cafeteria = new Boundary("Cafeteria", "Where crew members can relax, socialize, and eat meals specially made by the lovable chef.");
+            Boundary hallway = new Boundary("Hallway", "Connects the different rooms and provides access to the hololift.");
+            Boundary engineering = new Boundary("Engineering", "Holds the drive core and controls for energy that powers the ship.");
+            Boundary escape = new Boundary("Escape Port", "Holds the limited amount of escape pods on the ship.");
+            // Boundary hololift = new Boundary("Hololift", "Used to move to different levels of the ship.");
 
+            Item torch = new Item("Anti-Matter Torch", "Used to splice tools or cut through heavy metals.");
+            // Item nylocloth = new Item("Nylocloth", "Durable yet flexible material. Used often for clothing.");
+            // Item chlorogen = new Item("Chlorogen", "Extremely potent anesthesia. Most commonly used in medical procedures. Use caution due to potency.");
+            // Item eek = new Item("Rapid-firing blaster.", "Nicknamed 'Eek' due to the high-pitched 'Eee' sound it makes when you hold down the trigger.");
+
+            cafeteria.AddNeighborBoundary(hallway);
+            hallway.AddNeighborBoundary(engineering);
+            hallway.AddNeighborBoundary(escape);
+
+            engineering.Items.Add(torch);
         }
 
         public void Run()

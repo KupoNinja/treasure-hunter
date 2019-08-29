@@ -10,9 +10,13 @@ namespace TreasureHunter.Models
         public List<IItem> Items { get; set; }
         public Dictionary<string, IBoundary> NeighborBoundaries { get; set; }
 
-        public void AddNeighborBoundary(IBoundary neighbor, bool autoAdd)
+        public void AddNeighborBoundary(IBoundary neighbor, bool autoAdd = true)
         {
-
+            NeighborBoundaries.Add(neighbor.Name, neighbor);
+            if (autoAdd)
+            {
+                neighbor.AddNeighborBoundary(this, false);
+            }
         }
 
         public Boundary(string name, string description)

@@ -6,6 +6,7 @@ namespace TreasureHunter.Interfaces
     {
         string Name { get; set; }
         string Description { get; set; }
+        string AltDescript { get; set; }
         List<IItem> Items { get; set; }
         Dictionary<string, IBoundary> NeighborBoundaries { get; set; }
 

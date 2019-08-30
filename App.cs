@@ -71,22 +71,23 @@ namespace TreasureHunter
             Boundary cafeteria = new Boundary("Cafeteria", "You woke up in the cafeteria. There are dead crew members strewn about the room.\nYou see the entry to the hallway.");
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Escape Port, check the Engineering room, or go back to the Cafeteria.");
             Boundary engineering = new Boundary("Engineering", "You enter the Engineering room and see an Anti-Matter Torch in the hands of a dead crew member.");
-            Boundary escape = new Boundary("Escape Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
+            Boundary port = new Boundary("Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
             // Boundary hololift = new Boundary("Hololift", "Used to move to different levels of the ship.");
 
-            Item torch = new Item("Anti-Matter Torch", "Used to splice tools or cut through heavy metals.");
+            Item torch = new Item("Torch", "Used to splice tools or cut through heavy metals.");
             Item nylocloth = new Item("Nylocloth", "Durable yet flexible material. Used often for clothing.");
             // Item chlorogen = new Item("Chlorogen", "Extremely potent anesthesia. Most commonly used in medical procedures. Use caution due to potency.");
             Item eek = new Item("Equalizer", "Rapid-firing blaster. Nicknamed 'Eek' due to the high-pitched 'Eee' sound it makes when you hold down the trigger.");
 
             cafeteria.AddNeighborBoundary(hallway);
             hallway.AddNeighborBoundary(engineering);
-            hallway.AddNeighborBoundary(escape);
+            hallway.AddNeighborBoundary(port);
 
             engineering.Items.Add(torch);
 
+            // NOTE Take these out when done testing.
             Player.Inventory.Add(nylocloth);
-            Player.Inventory.Add(eek);
+            // Player.Inventory.Add(eek);
 
             Location = cafeteria;
         }
@@ -103,6 +104,13 @@ namespace TreasureHunter
         public void CaptureUserInput()
         {
             Console.WriteLine("------------------------------------------------------\n");
+            // NOTE Take this out after finishing ChangeLocation()
+            Console.WriteLine(Location.Name);
+            foreach (var kvp in Location.NeighborBoundaries)
+            {
+                Console.WriteLine(kvp.Key);
+            }
+
             Console.WriteLine("Type 'help' to display list of commands.");
             Console.Write("What do you do: ");
             string userInput = Console.ReadLine().ToLower();
@@ -112,7 +120,8 @@ namespace TreasureHunter
 
             if (words.Length > 1)
             {
-                option = words[1];
+                string firstLetter = words[1][0].ToString().ToUpper();
+                option = firstLetter + words[1].Substring(1);
             }
             switch (command)
             {
@@ -142,9 +151,41 @@ namespace TreasureHunter
 
         public void ChangeLocation(string locationName)
         {
-            // NOTE Start here
-            // Boundary destination = (Boundary)locationName;
-            // Location = locationName;
+            // NOTE Need to handle the repeating dialogue. Need a console clear somewhere.
+            if (locationName == "")
+            {
+                Console.WriteLine("Please enter the correct location.\n");
+            }
+            if (Location.NeighborBoundaries.ContainsKey(locationName))
+            {
+                Console.WriteLine(Player.Name);
+                Location = Location.NeighborBoundaries[locationName];
+                Console.WriteLine(Location.Name);
+                Console.ReadKey();
+            }
+
+            IItem targetItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
+            if (Player.Inventory.Contains(targetItem) && locationName == "Port")
+            {
+                string ending = "You use the torch to cut through the entry, pull the doors apart, and fall into the Escape Port. You rush to an escape pod, jump in, and hit the launch sequence.\nThe pod blasts through the open hatch and sends you to a safe distance. You watch the once mighty ship, The Venator, explode as you head towards the nearest planet. Alone...";
+                Location = Location.NeighborBoundaries[locationName];
+                Location.Description = ending;
+                Console.WriteLine(Location.Description);
+                Console.ReadKey();
+                // Console.Clear();
+                Console.WriteLine("");
+                Console.WriteLine("Thanks for playing! Would you like to play again? Y/N");
+                string playAgain = Console.ReadLine();
+                if (playAgain == "Y")
+                {
+                    Setup();
+                    Run();
+                }
+                if (playAgain == "N")
+                {
+                    Playing = false;
+                }
+            }
         }
 
         public void DisplayHelpInfo()
@@ -163,10 +204,12 @@ namespace TreasureHunter
             Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("Press enter to go back.");
             Console.ReadLine();
+            Console.Clear();
         }
 
         public void DisplayMenu()
         {
+            Console.WriteLine(Location.Description);
             CaptureUserInput();
             return;
         }
@@ -186,16 +229,25 @@ namespace TreasureHunter
             // NOTE Can set to be able to use items later on.
             Console.WriteLine("Press enter to go back.");
             Console.ReadLine();
+            Console.Clear();
         }
 
+        // NOTE Wondering if this is necessary with how I've built this out now.
         public void DisplayRoomDescription()
         {
+            Console.Clear();
             Console.WriteLine(Location.Description);
+            Console.WriteLine("Press enter to go back.");
+            Console.ReadLine();
+            Console.Clear();
         }
 
-        public void TakeItem()
+        public void TakeItem(string option)
         {
 
+            // if (Location.Items.Contains(option))
+            // // IItem targetItem = Player.Inventory.Find(i => i.Name.ToLower() == option);
+            // Player.Inventory.Add(targetItem);
         }
 
         public App()

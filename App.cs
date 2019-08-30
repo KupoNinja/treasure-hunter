@@ -54,20 +54,24 @@ namespace TreasureHunter
             Console.WriteLine("You slowly gain consciousness and your blurred vision starts to focus as you groggily look around. You see dead crew members strewn about the room.");
             Console.WriteLine("Sparks fly from various consoles.");
             Console.WriteLine("The ringing in your ears starts to lessen and is replaced by the ship's AI repeating -\n");
+            Console.ReadKey();
             Typewrite("\"Ship is in critical condition. Hostile life forms on board. Please head to the escape pods.\"");
+            Console.WriteLine("------------------------------------------------------\n");
 
             // NOTE Think of a better scenario to ask name.
             Player.GetPlayerName();
+            // NOTE Should I have this here?
+            Console.Clear();
         }
 
         public void Setup()
         {
             // NOTE Implement others after you finish requirements.
             // TODO Change the Descriptions to the scenario.
-            Boundary cafeteria = new Boundary("Cafeteria", "Where crew members can relax, socialize, and eat meals specially made by the lovable chef.");
-            Boundary hallway = new Boundary("Hallway", "Connects the different rooms and provides access to the hololift.");
-            Boundary engineering = new Boundary("Engineering", "Holds the drive core and controls for energy that powers the ship.");
-            Boundary escape = new Boundary("Escape Port", "Holds the limited amount of escape pods on the ship.");
+            Boundary cafeteria = new Boundary("Cafeteria", "You woke up in the cafeteria. There are dead crew members strewn about the room.\nYou see the entry to the hallway.");
+            Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Escape Port, check the Engineering room, or go back to the Cafeteria.");
+            Boundary engineering = new Boundary("Engineering", "You enter the Engineering room and see an Anti-Matter Torch in the hands of a dead crew member.");
+            Boundary escape = new Boundary("Escape Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
             // Boundary hololift = new Boundary("Hololift", "Used to move to different levels of the ship.");
 
             Item torch = new Item("Anti-Matter Torch", "Used to splice tools or cut through heavy metals.");
@@ -98,6 +102,7 @@ namespace TreasureHunter
 
         public void CaptureUserInput()
         {
+            Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("Type 'help' to display list of commands.");
             Console.Write("What do you do: ");
             string userInput = Console.ReadLine().ToLower();
@@ -155,7 +160,7 @@ namespace TreasureHunter
             Console.WriteLine("'Inventory' - Displays a list of your inventory.\n");
             Console.WriteLine("'Help' - Displays the list of commands.\n");
             Console.WriteLine("'Quit' - Quits the game.\n");
-
+            Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("Press enter to go back.");
             Console.ReadLine();
         }

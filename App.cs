@@ -131,6 +131,9 @@ namespace TreasureHunter
                 case "go":
                     ChangeLocation(option);
                     break;
+                case "take":
+                    TakeItem(option);
+                    break;
                 case "inventory":
                     DisplayPlayerInventory();
                     break;
@@ -242,16 +245,25 @@ namespace TreasureHunter
             Console.Clear();
         }
 
-        public void TakeItem(string option)
+        public void TakeItem(string item)
         {
-
-            // if (Location.Items.Contains(option))
-            // // IItem targetItem = Player.Inventory.Find(i => i.Name.ToLower() == option);
-            // Player.Inventory.Add(targetItem);
+            Console.WriteLine(Location.Items[0].Name);
+            IItem targetItem = Location.Items.Find(i => i.Name.ToLower() == item);
+            if (Location.Items.Contains(targetItem))
+            {
+                Player.Inventory.Add(targetItem);
+                Console.WriteLine($"You acquired {targetItem.Name}!");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine("That item isn't in here.");
+            }
         }
 
         public App()
         {
+
             Player = new Player();
             Playing = true;
         }

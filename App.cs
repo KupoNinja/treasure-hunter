@@ -159,6 +159,7 @@ namespace TreasureHunter
                 Console.WriteLine(Location.AltDescription);
                 Console.ReadKey();
                 // Console.Clear();
+                Replay();
                 return;
             }
 

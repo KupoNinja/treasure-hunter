@@ -154,6 +154,31 @@ namespace TreasureHunter
 
         public void ChangeLocation(string locationName)
         {
+            IItem targetItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
+            if (Player.Inventory.Contains(targetItem) && locationName == "Port")
+            {
+                string ending = "You use the torch to cut through the entry, pull the doors apart, and fall into the Escape Port. You rush to an escape pod, jump in, and hit the launch sequence.\nThe pod blasts through the open hatch and sends you to a safe distance. You watch the once mighty ship, The Venator, explode as you head towards the nearest planet. Alone...";
+                Location = Location.NeighborBoundaries[locationName];
+                Location.Description = ending;
+                Console.WriteLine(Location.Description);
+                Console.ReadKey();
+                // Console.Clear();
+                Console.WriteLine("");
+                Console.WriteLine($"Thanks for playing {Player.Name}! Would you like to play again? Y/N");
+                string playAgain = Console.ReadLine();
+                if (playAgain == "Y")
+                {
+                    Setup();
+                    Run();
+                }
+                if (playAgain == "N")
+                {
+                    Playing = false;
+                }
+
+                return;
+            }
+
             // NOTE Need to handle the repeating dialogue. Need a console clear somewhere.
             if (locationName == "")
             {
@@ -165,29 +190,6 @@ namespace TreasureHunter
                 Location = Location.NeighborBoundaries[locationName];
                 Console.WriteLine(Location.Name);
                 Console.ReadKey();
-            }
-
-            IItem targetItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
-            if (Player.Inventory.Contains(targetItem) && locationName == "Port")
-            {
-                string ending = "You use the torch to cut through the entry, pull the doors apart, and fall into the Escape Port. You rush to an escape pod, jump in, and hit the launch sequence.\nThe pod blasts through the open hatch and sends you to a safe distance. You watch the once mighty ship, The Venator, explode as you head towards the nearest planet. Alone...";
-                Location = Location.NeighborBoundaries[locationName];
-                Location.Description = ending;
-                Console.WriteLine(Location.Description);
-                Console.ReadKey();
-                // Console.Clear();
-                Console.WriteLine("");
-                Console.WriteLine("Thanks for playing! Would you like to play again? Y/N");
-                string playAgain = Console.ReadLine();
-                if (playAgain == "Y")
-                {
-                    Setup();
-                    Run();
-                }
-                if (playAgain == "N")
-                {
-                    Playing = false;
-                }
             }
         }
 
@@ -247,8 +249,18 @@ namespace TreasureHunter
 
         public void TakeItem(string item)
         {
+            // NOTE Take this out after testing.
             Console.WriteLine(Location.Items[0].Name);
-            IItem targetItem = Location.Items.Find(i => i.Name.ToLower() == item);
+
+            IItem targetItem = Location.Items.Find(i => i.Name.ToLower() == item.ToLower());
+            if (targetItem is null)
+            {
+                Console.WriteLine("This item doesn't exist.");
+                return;
+            }
+
+            Console.WriteLine(targetItem.Name);
+            Console.ReadKey();
             if (Location.Items.Contains(targetItem))
             {
                 Player.Inventory.Add(targetItem);
@@ -263,7 +275,6 @@ namespace TreasureHunter
 
         public App()
         {
-
             Player = new Player();
             Playing = true;
         }

@@ -97,6 +97,7 @@ namespace TreasureHunter
 
         public void Run()
         {
+            DisplayTitle();
             Greeting();
             while (Playing)
             {
@@ -158,22 +159,6 @@ namespace TreasureHunter
                 Console.WriteLine(Location.AltDescription);
                 Console.ReadKey();
                 // Console.Clear();
-                Console.WriteLine("");
-                Console.WriteLine($"Thanks for playing {Player.Name}! Would you like to play again? Y/N");
-                string playAgain = Console.ReadLine();
-                if (playAgain == "Y")
-                {
-                    Console.Clear();
-                    DisplayTitle();
-                    Greeting();
-                    Setup();
-                    Run();
-                }
-                if (playAgain == "N")
-                {
-                    Playing = false;
-                }
-
                 return;
             }
 
@@ -187,6 +172,23 @@ namespace TreasureHunter
                 Location = Location.NeighborBoundaries[locationName];
                 Console.WriteLine(Location.Name);
                 Console.ReadKey();
+            }
+        }
+
+        public void Replay()
+        {
+            Console.WriteLine("");
+            Console.WriteLine($"Thanks for playing {Player.Name}! Would you like to play again? Y/N");
+            string playAgain = Console.ReadLine();
+            if (playAgain == "Y")
+            {
+                Console.Clear();
+                Setup();
+                Run();
+            }
+            if (playAgain == "N")
+            {
+                Playing = false;
             }
         }
 
@@ -259,10 +261,10 @@ namespace TreasureHunter
         public void TakeItem(string item)
         {
             // NOTE Handle if room has no items
-            if (!Location.Items.Any())
-            {
-                Console.WriteLine("There are no items in this room.");
-            }
+            // if (!Location.Items.Any())
+            // {
+            //     Console.WriteLine("There are no items in this room.");
+            // }
 
             IItem targetItem = Location.Items.Find(i => i.Name.ToLower() == item.ToLower());
             if (targetItem is null)
@@ -278,10 +280,6 @@ namespace TreasureHunter
                 Player.Inventory.Add(targetItem);
                 Console.WriteLine($"You acquired {targetItem.Name}!");
                 Console.ReadKey();
-            }
-            else
-            {
-                Console.WriteLine("That item isn't in here.");
             }
         }
 

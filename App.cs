@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using TreasureHunter.Interfaces;
 using TreasureHunter.Models;
@@ -49,6 +50,8 @@ namespace TreasureHunter
         {
             // NOTE Add delays and "sound effects"
             Console.Clear();
+            // Sound effects
+            // Console.Beep(1500, 5000);
             // Typewrite("WAKE UP!! GET UP!!! ");
             // Typewrite("GET ON YOUR FEET NOW!!!\n");
             Console.WriteLine("You slowly gain consciousness and your blurred vision starts to focus as you groggily look around. You see dead crew members strewn about the room.");
@@ -67,11 +70,11 @@ namespace TreasureHunter
         public void Setup()
         {
             // NOTE Implement others after you finish requirements.
-            // TODO Change the Descriptions to the scenario.
             Boundary cafeteria = new Boundary("Cafeteria", "You woke up in the cafeteria. There are dead crew members strewn about the room.\nYou see the entry to the hallway.");
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Escape Port, check the Engineering room, or go back to the Cafeteria.");
             Boundary engineering = new Boundary("Engineering", "You enter the Engineering room and see an Anti-Matter Torch in the hands of a dead crew member.");
             Boundary port = new Boundary("Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
+            port.AltDescription = "You use the torch to cut through the entry, pull the doors apart, and fall into the Escape Port. You rush to an escape pod, jump in, and hit the launch sequence.\nThe pod blasts through the open hatch and sends you to a safe distance. You watch the once mighty ship, The Venator, explode as you head towards the nearest planet. Alone...";
             // Boundary hololift = new Boundary("Hololift", "Used to move to different levels of the ship.");
 
             Item torch = new Item("Torch", "Used to splice tools or cut through heavy metals.");
@@ -104,13 +107,6 @@ namespace TreasureHunter
         public void CaptureUserInput()
         {
             Console.WriteLine("------------------------------------------------------\n");
-            // NOTE Take this out after finishing ChangeLocation()
-            Console.WriteLine(Location.Name);
-            foreach (var kvp in Location.NeighborBoundaries)
-            {
-                Console.WriteLine(kvp.Key);
-            }
-
             Console.WriteLine("Type 'help' to display list of commands.");
             Console.Write("What do you do: ");
             string userInput = Console.ReadLine().ToLower();
@@ -130,6 +126,7 @@ namespace TreasureHunter
                     break;
                 case "go":
                     ChangeLocation(option);
+                    Console.Clear();
                     break;
                 case "take":
                     TakeItem(option);
@@ -157,10 +154,8 @@ namespace TreasureHunter
             IItem targetItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
             if (Player.Inventory.Contains(targetItem) && locationName == "Port")
             {
-                string ending = "You use the torch to cut through the entry, pull the doors apart, and fall into the Escape Port. You rush to an escape pod, jump in, and hit the launch sequence.\nThe pod blasts through the open hatch and sends you to a safe distance. You watch the once mighty ship, The Venator, explode as you head towards the nearest planet. Alone...";
                 Location = Location.NeighborBoundaries[locationName];
-                Location.Description = ending;
-                Console.WriteLine(Location.Description);
+                Console.WriteLine(Location.AltDescription);
                 Console.ReadKey();
                 // Console.Clear();
                 Console.WriteLine("");
@@ -168,6 +163,9 @@ namespace TreasureHunter
                 string playAgain = Console.ReadLine();
                 if (playAgain == "Y")
                 {
+                    Console.Clear();
+                    DisplayTitle();
+                    Greeting();
                     Setup();
                     Run();
                 }
@@ -186,7 +184,6 @@ namespace TreasureHunter
             }
             if (Location.NeighborBoundaries.ContainsKey(locationName))
             {
-                Console.WriteLine(Player.Name);
                 Location = Location.NeighborBoundaries[locationName];
                 Console.WriteLine(Location.Name);
                 Console.ReadKey();
@@ -241,7 +238,19 @@ namespace TreasureHunter
         public void DisplayRoomDescription()
         {
             Console.Clear();
-            Console.WriteLine(Location.Description);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"You are in the {Location.Name}.");
+            Console.ResetColor();
+            Console.WriteLine("------------------------------------------------------\n");
+            if (Location.Name == "Port")
+            {
+                Console.WriteLine($"{Location.AltDescription}\n");
+            }
+            else
+            {
+                Console.WriteLine($"{Location.Description}\n");
+            }
+            Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("Press enter to go back.");
             Console.ReadLine();
             Console.Clear();
@@ -249,8 +258,11 @@ namespace TreasureHunter
 
         public void TakeItem(string item)
         {
-            // NOTE Take this out after testing.
-            Console.WriteLine(Location.Items[0].Name);
+            // NOTE Handle if room has no items
+            if (!Location.Items.Any())
+            {
+                Console.WriteLine("There are no items in this room.");
+            }
 
             IItem targetItem = Location.Items.Find(i => i.Name.ToLower() == item.ToLower());
             if (targetItem is null)

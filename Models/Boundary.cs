@@ -7,7 +7,7 @@ namespace TreasureHunter.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string AltDescript { get; set; }
+        public string AltDescription { get; set; }
         public List<IItem> Items { get; set; }
         public Dictionary<string, IBoundary> NeighborBoundaries { get; set; }
 
@@ -24,6 +24,7 @@ namespace TreasureHunter.Models
         {
             Name = name;
             Description = description;
+            AltDescription = "";
             Items = new List<IItem>();
             NeighborBoundaries = new Dictionary<string, IBoundary>();
         }

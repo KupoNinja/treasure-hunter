@@ -66,7 +66,6 @@ namespace TreasureHunter
 
             // NOTE Think of a better scenario to ask name.
             Player.GetPlayerName();
-            // NOTE Should I have this here?
             Console.Clear();
         }
 
@@ -80,7 +79,9 @@ namespace TreasureHunter
             Boundary doctor = new Boundary("Doctor", "You rush to the doctor and check her pulse. Nothing. You start to tear at the debris on top of her to attempt CPR but discover she's been impaled as you lift the last piece of debris.\nIn both her hands you notice some nylocloth and a vial of chlorogen. Her failed attempt to alleviate the pain.");
             doctor.AltDescription = "You check the doctor again. There's nothing you can do for her. You hear an explosion nearby. You have to get to the escape pods!";
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Escape Port, check the Engineering room, or go back to the Cafeteria.");
+            // NOTE Maybe add the losing scenario in the Engineering Room. Add alien encounter.
             Boundary engineering = new Boundary("Engineering", "You enter the Engineering room and see an Anti-Matter Torch in the hands of a dead crew member.");
+            // NOTE Still want to add an alien encounter in the Port.
             Boundary port = new Boundary("Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
             port.AltDescription = "You use the torch to cut through the entry, pull the doors apart, and fall into the Escape Port. You rush to an escape pod, jump in, and hit the launch sequence.\nThe pod blasts through the open hatch and sends you to a safe distance. You watch the once mighty ship, The Venator, explode as you head towards the nearest planet. Alone...";
             // Boundary hololift = new Boundary("Hololift", "Used to move to different levels of the ship.");
@@ -114,6 +115,7 @@ namespace TreasureHunter
 
         public void CaptureUserInput()
         {
+            // NOTE Blows up if you just do a space and a blank line after hitting enter.
             Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("Type 'help' to display list of commands.");
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -126,6 +128,11 @@ namespace TreasureHunter
 
             if (words.Length > 1)
             {
+                // NOTE Still blew up when entering just a space
+                // if (words[1] is null)
+                // {
+                //     Console.WriteLine("Please enter the correct location or item.");
+                // }
                 string firstLetter = words[1][0].ToString().ToUpper();
                 option = firstLetter + words[1].Substring(1);
             }
@@ -163,33 +170,6 @@ namespace TreasureHunter
             Playing = false;
         }
 
-        public void ChangeLocation(string locationName)
-        {
-            // IItem doctorItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
-            IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
-            if (Player.Inventory.Contains(portItem) && locationName == "Port")
-            {
-                Location = Location.NeighborBoundaries[locationName];
-                Console.Clear();
-                Console.WriteLine(Location.AltDescription);
-                Console.ReadKey();
-                Replay();
-                return;
-            }
-
-            // NOTE Need to handle the repeating dialogue. Need a console clear somewhere.
-            if (locationName == "")
-            {
-                Console.WriteLine("Please enter the correct location.\n");
-            }
-            if (Location.NeighborBoundaries.ContainsKey(locationName))
-            {
-                Location = Location.NeighborBoundaries[locationName];
-                // Console.ReadKey();
-                // Console.Clear();
-            }
-        }
-
         public void Replay()
         {
             Console.WriteLine("");
@@ -204,6 +184,32 @@ namespace TreasureHunter
             if (playAgain == "N")
             {
                 Playing = false;
+            }
+        }
+
+        public void ChangeLocation(string locationName)
+        {
+            // TODO  Need to handle Cafeteria and Doctor backtracking story. Use AltDescription. Look into IsLosable prop for Boundary.
+            IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
+            if (Player.Inventory.Contains(portItem) && locationName == "Port")
+            {
+                Location = Location.NeighborBoundaries[locationName];
+                Console.Clear();
+                Console.WriteLine(Location.AltDescription);
+                Console.ReadKey();
+                Replay();
+                return;
+            }
+
+            if (locationName == "")
+            {
+                Console.WriteLine("Please enter the correct location.\n");
+            }
+            if (Location.NeighborBoundaries.ContainsKey(locationName))
+            {
+                Location = Location.NeighborBoundaries[locationName];
+                // Console.ReadKey();
+                // Console.Clear();
             }
         }
 
@@ -273,7 +279,6 @@ namespace TreasureHunter
             Console.Clear();
         }
 
-        // NOTE Wondering if this is necessary with how I've built this out now.
         public void DisplayRoomDescription()
         {
             Console.Clear();
@@ -295,8 +300,12 @@ namespace TreasureHunter
             Console.WriteLine($"You can 'go' to these locations:");
             Location.DisplayNeighborBoundaries();
             Console.WriteLine("");
-            Console.WriteLine($"You can 'take' these items:");
-            Location.DisplayLocationItems();
+            if (Location.Items.Any())
+            {
+                Console.WriteLine($"You can 'take' these items:");
+                Location.DisplayLocationItems();
+                Console.WriteLine("");
+            }
             Console.WriteLine("------------------------------------------------------\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Press any key to go back.");

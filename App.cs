@@ -78,14 +78,19 @@ namespace TreasureHunter
             // NOTE Implement others after you finish requirements.
             Boundary cafeteria = new Boundary("Cafeteria", "Your adrenaline kicks in and you jolt up. Taking a quick assesment of the room you see the entry to the hallway. By the entrance you see the ship's doctor motionless under debris.");
             cafeteria.AltDescription = "You do another scan of the cafeteria. There's nothing else here for you. You hear an explosion nearby. You have to get to the escape pods!";
+
             Boundary doctor = new Boundary("Doctor", "You rush to the doctor and check her pulse. Nothing. You start to tear at the debris on top of her to attempt CPR but discover she's been impaled as you lift the last piece of debris.\nIn both her hands you notice some nylocloth and a vial of chlorogen. Her failed attempt to alleviate the pain.");
             doctor.AltDescription = "You check the doctor again. There's nothing you can do for her. You hear an explosion nearby. You have to get to the escape pods!";
-            Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Escape Port, check the Engineering room, or go back to the Cafeteria.");
+
+            Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Port for the escape pods, try the Hololift to find a different Port at another level, check the Engineering room, or go back to the Cafeteria.");
             // NOTE Maybe add the losing scenario in the Engineering Room. Add alien encounter.
-            Boundary engineering = new Boundary("Engineering", "You enter the Engineering room and see a splicer in the hands of a dead crew member.");
+
+            Boundary engineering = new Boundary("Engineering", "You reach the Engineering room and the entryway is open. The door panel sparking and smoking from fresh blaster marks.\nYou peer into the room and see a Warpmancer soldier rummaging through the different compartments. He throws tools and parts over his shoulder as he looks for something specific to loot.\nYou notice one of the tools he's discarded is a splicer. You sneak into the room and hide behind some alloy crates continuing to watch the Warpmancer. You hear 3 quick, sharp pings and the Warpmancer perks up and rushes back out the door.");
+
             // NOTE Still want to add an alien encounter in the Port.
             Boundary port = new Boundary("Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
             port.AltDescription = "You use the splicer to cut through the entry, pull the doors apart, and fall into the Escape Port. You rush to an escape pod, jump in, and hit the launch sequence.\nThe pod blasts through the open hatch and sends you to a safe distance. You watch the once mighty ship, The Venator, explode as you head towards the nearest planet. Alone...";
+
             Boundary hololift = new Boundary("Hololift", "You run to the hololift and hit the button to open the door. The doors open and you instantly get sucked out into the cold void of space. The vacuum of space sucks the scream out of your lungs as you see the enemy Warpmancer ship continue to fire at your ship. Your vision starts to blur and fade as the void embraces you into its fold.");
 
             Item splicer = new Item("Splicer", "Used to splice tools or cut through heavy metals.");
@@ -129,13 +134,15 @@ namespace TreasureHunter
             string command = words[0];
             string option = "";
 
+
             if (words.Length > 1)
             {
-                // NOTE Still blew up when entering just a space
-                // if (words[1] is null)
-                // {
-                //     Console.WriteLine("Please enter the correct location or item.");
-                // }
+                if (words[1] == "")
+                {
+                    Console.WriteLine("Please enter the correct location or item.");
+                    Console.ReadKey();
+                    return;
+                }
                 string firstLetter = words[1][0].ToString().ToUpper();
                 option = firstLetter + words[1].Substring(1);
             }

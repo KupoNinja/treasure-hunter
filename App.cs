@@ -148,15 +148,22 @@ namespace TreasureHunter
                     DisplayHelpInfo();
                     break;
                 case "quit":
-                    // NOTE Maybe set up a quit "cutscene"
-                    Console.WriteLine("Bye " + Player.Name);
-                    Console.ReadKey();
-                    Playing = false;
+                    Quit();
+                    // Console.WriteLine("Bye " + Player.Name);
+                    // Console.ReadKey();
+                    // Playing = false;
                     break;
                 default:
                     Console.WriteLine("Invalid option");
                     break;
             }
+        }
+
+        public void Quit()
+        {
+            Console.Clear();
+            Console.WriteLine($"You curl up into the fetal position and start to sob uncontrollably as the deafening explosions continue around you.\nYou've heard of the cunning Warpmancers and their vastly advanced technology but your hubris as a young captain has led you and your crew to a ruthless fate.\nAt least you can go down in history as Captain {Player.Name}. The first man to experience the advantages of blink teleportation in times of war and how fast a dreadnought class ship could be turned into space dust.");
+            Playing = false;
         }
 
         public void ChangeLocation(string locationName)

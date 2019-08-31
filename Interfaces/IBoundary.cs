@@ -15,5 +15,6 @@ namespace TreasureHunter.Interfaces
 
         void AddNeighborBoundary(IBoundary neighbor, bool autoAdd);
         void DisplayNeighborBoundaries();
+        void DisplayLocationItems();
     }
 }

@@ -29,6 +29,14 @@ namespace TreasureHunter.Models
             }
         }
 
+        public void DisplayLocationItems()
+        {
+            foreach (var item in Items)
+            {
+                Console.WriteLine(item.Name);
+            }
+        }
+
         public Boundary(string name, string description)
         {
             Name = name;

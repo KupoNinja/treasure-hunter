@@ -77,7 +77,7 @@ namespace TreasureHunter
             // NOTE Implement others after you finish requirements.
             Boundary cafeteria = new Boundary("Cafeteria", "Your adrenaline kicks in and you jolt up. Taking a quick assesment of the room you see the entry to the hallway. By the entrance you see the ship's doctor motionless under debris.");
             cafeteria.AltDescription = "You do another scan of the cafeteria. There's nothing else here for you. You hear an explosion nearby. You have to get to the escape pods!";
-            Boundary doctor = new Boundary("Doctor", "You rush to the doctor and check her pulse. Nothing. You start to tear at the debris on top of her to attempt CPR but discover she's been impaled as you lift the last piece of debris. In both her hands you notice some nylocloth and a vial of chlorogen. Her failed attempt to alleviate the pain.");
+            Boundary doctor = new Boundary("Doctor", "You rush to the doctor and check her pulse. Nothing. You start to tear at the debris on top of her to attempt CPR but discover she's been impaled as you lift the last piece of debris.\nIn both her hands you notice some nylocloth and a vial of chlorogen. Her failed attempt to alleviate the pain.");
             doctor.AltDescription = "You check the doctor again. There's nothing you can do for her. You hear an explosion nearby. You have to get to the escape pods!";
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Escape Port, check the Engineering room, or go back to the Cafeteria.");
             Boundary engineering = new Boundary("Engineering", "You enter the Engineering room and see an Anti-Matter Torch in the hands of a dead crew member.");
@@ -149,12 +149,9 @@ namespace TreasureHunter
                     break;
                 case "quit":
                     Quit();
-                    // Console.WriteLine("Bye " + Player.Name);
-                    // Console.ReadKey();
-                    // Playing = false;
                     break;
                 default:
-                    Console.WriteLine("Invalid option");
+                    Console.WriteLine("Invalid option\n");
                     break;
             }
         }
@@ -162,7 +159,7 @@ namespace TreasureHunter
         public void Quit()
         {
             Console.Clear();
-            Console.WriteLine($"You curl up into the fetal position and start to sob uncontrollably as the deafening explosions continue around you.\nYou've heard of the cunning Warpmancers and their vastly advanced technology but your hubris as a young captain has led you and your crew to a ruthless fate.\nAt least you can go down in history as Captain {Player.Name}. The first man to experience the advantages of blink teleportation in times of war and how fast a dreadnought class ship could be turned into space dust.");
+            Console.WriteLine($"You curl up into the fetal position and start to sob uncontrollably as the deafening explosions continue around you.\nYou've heard of the cunning Warpmancers and their vastly advanced technology but your hubris as a young captain has led you and your crew to a ruthless fate.\nAt least you can go down in history as Captain {Player.Name}. The first man to experience how fast a dreadnought class ship could be turned into space dust.");
             Playing = false;
         }
 
@@ -253,6 +250,12 @@ namespace TreasureHunter
             Console.WriteLine($"{Player.Name}'s Inventory\n");
             Console.ResetColor();
             Console.WriteLine("================================================================================\n");
+            if (!Player.Inventory.Any())
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You do not have any items.");
+                Console.ResetColor();
+            }
             Console.ForegroundColor = ConsoleColor.Cyan;
             foreach (var item in Player.Inventory)
             {
@@ -276,7 +279,7 @@ namespace TreasureHunter
             Console.Clear();
             Console.WriteLine("================================================================================\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"You are in the {Location.Name}.");
+            Console.WriteLine($"You are at the {Location.Name}.");
             Console.ResetColor();
             Console.WriteLine("================================================================================\n");
             Console.WriteLine("------------------------------------------------------\n");
@@ -291,6 +294,9 @@ namespace TreasureHunter
             Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine($"You can 'go' to these locations:");
             Location.DisplayNeighborBoundaries();
+            Console.WriteLine("");
+            Console.WriteLine($"You can 'take' these items:");
+            Location.DisplayLocationItems();
             Console.WriteLine("------------------------------------------------------\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Press any key to go back.");

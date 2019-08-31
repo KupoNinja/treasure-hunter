@@ -32,7 +32,9 @@ namespace TreasureHunter
             Console.WriteLine("=====================================================================================================================================================");
 
             Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Press any key to start or Ctrl+C to exit.");
+            Console.ResetColor();
             Console.ReadKey();
         }
 
@@ -54,11 +56,14 @@ namespace TreasureHunter
             // Console.Beep(1500, 5000);
             // Typewrite("WAKE UP!! GET UP!!! ");
             // Typewrite("GET ON YOUR FEET NOW!!!\n");
+            Console.WriteLine("================================================================================\n");
             Console.WriteLine("You slowly gain consciousness and your blurred vision starts to focus as you groggily look around. You see dead crew members strewn about the room.");
             Console.WriteLine("Sparks fly from various consoles.");
             Console.WriteLine("The ringing in your ears starts to lessen and is replaced by the ship's AI repeating -\n");
             Console.ReadKey();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Typewrite("\"Ship is in critical condition. Hostile life forms on board. Please head to the escape pods.\"");
+            Console.ResetColor();
             Console.WriteLine("------------------------------------------------------\n");
 
             // NOTE Think of a better scenario to ask name.
@@ -69,6 +74,8 @@ namespace TreasureHunter
 
         public void Setup()
         {
+            Player.Inventory.Clear();
+
             // NOTE Implement others after you finish requirements.
             Boundary cafeteria = new Boundary("Cafeteria", "You woke up in the cafeteria. There are dead crew members strewn about the room.\nYou see the entry to the hallway.");
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Escape Port, check the Engineering room, or go back to the Cafeteria.");
@@ -109,7 +116,9 @@ namespace TreasureHunter
         {
             Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("Type 'help' to display list of commands.");
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("What do you do: ");
+            Console.ResetColor();
             string userInput = Console.ReadLine().ToLower();
             string[] words = userInput.Split(' ');
             string command = words[0];
@@ -156,9 +165,9 @@ namespace TreasureHunter
             if (Player.Inventory.Contains(targetItem) && locationName == "Port")
             {
                 Location = Location.NeighborBoundaries[locationName];
+                Console.Clear();
                 Console.WriteLine(Location.AltDescription);
                 Console.ReadKey();
-                // Console.Clear();
                 Replay();
                 return;
             }
@@ -171,8 +180,8 @@ namespace TreasureHunter
             if (Location.NeighborBoundaries.ContainsKey(locationName))
             {
                 Location = Location.NeighborBoundaries[locationName];
-                Console.WriteLine(Location.Name);
-                Console.ReadKey();
+                // Console.ReadKey();
+                // Console.Clear();
             }
         }
 
@@ -180,14 +189,14 @@ namespace TreasureHunter
         {
             Console.WriteLine("");
             Console.WriteLine($"Thanks for playing {Player.Name}! Would you like to play again? Y/N");
-            string playAgain = Console.ReadLine();
-            if (playAgain == "Y")
+            string playAgain = Console.ReadLine().ToLower();
+            if (playAgain == "y")
             {
                 Console.Clear();
                 Setup();
                 Run();
             }
-            if (playAgain == "N")
+            if (playAgain == "n")
             {
                 Playing = false;
             }
@@ -196,9 +205,12 @@ namespace TreasureHunter
         public void DisplayHelpInfo()
         {
             Console.Clear();
-            Console.WriteLine("The goal of the game is to get to the escape pods and escape the exploding ship.");
             Console.WriteLine("================================================================================\n");
-            Console.WriteLine("-Type the below commands to progress through the game.");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("The goal of the game is to get to the escape pods and escape the exploding ship.\n");
+            Console.ResetColor();
+            Console.WriteLine("================================================================================\n");
+            Console.WriteLine("Type the below commands to progress through the game.");
             Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("'Look' - Displays room description.\n");
             Console.WriteLine("'Go <Location>' - Moves you to your desired location.\n");
@@ -207,14 +219,18 @@ namespace TreasureHunter
             Console.WriteLine("'Help' - Displays the list of commands.\n");
             Console.WriteLine("'Quit' - Quits the game.\n");
             Console.WriteLine("------------------------------------------------------\n");
-            Console.WriteLine("Press enter to go back.");
-            Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Press any key to go back.");
+            Console.ResetColor();
+            Console.ReadKey();
             Console.Clear();
         }
 
         public void DisplayMenu()
         {
-            Console.WriteLine(Location.Description);
+            Console.WriteLine("================================================================================\n");
+            Console.WriteLine($"{Location.Description}\n");
+            Console.WriteLine("================================================================================\n");
             CaptureUserInput();
             return;
         }
@@ -225,15 +241,24 @@ namespace TreasureHunter
             // Player.Inventory.ForEach(Console.WriteLine);
             Console.Clear();
             Console.WriteLine("================================================================================\n");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{Player.Name}'s Inventory\n");
+            Console.ResetColor();
+            Console.WriteLine("================================================================================\n");
+            Console.ForegroundColor = ConsoleColor.Cyan;
             foreach (var item in Player.Inventory)
             {
                 Console.WriteLine($"{item.Name} - {item.Description}\n");
             }
+            Console.ResetColor();
             Console.WriteLine("");
-            Console.WriteLine("================================================================================\n");
+            // Console.WriteLine("================================================================================\n");
+            Console.WriteLine("--------------------------------------------------------------------------------\n");
             // NOTE Can set to be able to use items later on.
-            Console.WriteLine("Press enter to go back.");
-            Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Press any key to go back.");
+            Console.ResetColor();
+            Console.ReadKey();
             Console.Clear();
         }
 
@@ -241,9 +266,11 @@ namespace TreasureHunter
         public void DisplayRoomDescription()
         {
             Console.Clear();
+            Console.WriteLine("================================================================================\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"You are in the {Location.Name}.");
             Console.ResetColor();
+            Console.WriteLine("================================================================================\n");
             Console.WriteLine("------------------------------------------------------\n");
             if (Location.Name == "Port")
             {
@@ -254,19 +281,19 @@ namespace TreasureHunter
                 Console.WriteLine($"{Location.Description}\n");
             }
             Console.WriteLine("------------------------------------------------------\n");
-            Console.WriteLine("Press enter to go back.");
-            Console.ReadLine();
+            Console.WriteLine($"You can 'go' to these locations:");
+            Location.DisplayNeighborBoundaries();
+            Console.WriteLine("------------------------------------------------------\n");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Press any key to go back.");
+            Console.ResetColor();
+            Console.ReadKey();
             Console.Clear();
         }
 
         public void TakeItem(string item)
         {
-            // NOTE Handle if room has no items
-            // if (!Location.Items.Any())
-            // {
-            //     Console.WriteLine("There are no items in this room.");
-            // }
-
+            // NOTE Error if user enters a space after using take option
             IItem targetItem = Location.Items.Find(i => i.Name.ToLower() == item.ToLower());
             if (targetItem is null)
             {
@@ -274,13 +301,12 @@ namespace TreasureHunter
                 return;
             }
 
-            Console.WriteLine(targetItem.Name);
-            Console.ReadKey();
             if (Location.Items.Contains(targetItem))
             {
                 Player.Inventory.Add(targetItem);
                 Console.WriteLine($"You acquired {targetItem.Name}!");
                 Console.ReadKey();
+                Console.Clear();
             }
         }
 

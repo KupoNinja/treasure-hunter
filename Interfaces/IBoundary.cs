@@ -14,5 +14,6 @@ namespace TreasureHunter.Interfaces
         // bool IsLosable { get; set; } //NOTE you might not use this but could be useful for extension ideas
 
         void AddNeighborBoundary(IBoundary neighbor, bool autoAdd);
+        void DisplayNeighborBoundaries();
     }
 }

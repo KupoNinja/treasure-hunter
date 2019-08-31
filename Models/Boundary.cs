@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TreasureHunter.Interfaces;
 
@@ -17,6 +18,14 @@ namespace TreasureHunter.Models
             if (autoAdd)
             {
                 neighbor.AddNeighborBoundary(this, false);
+            }
+        }
+
+        public void DisplayNeighborBoundaries()
+        {
+            foreach (var kvp in NeighborBoundaries)
+            {
+                Console.WriteLine(kvp.Key);
             }
         }
 

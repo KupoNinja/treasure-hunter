@@ -51,6 +51,8 @@ namespace TreasureHunter
         public void Greeting()
         {
             // NOTE Add delays and "sound effects"
+            // NOTE Add Event class (name, description, isTriggered). List<Event> Events in Boundary.
+            // NOTE Add Enemies class
             Console.Clear();
             // Sound effects
             // Console.Beep(1500, 5000);
@@ -60,9 +62,9 @@ namespace TreasureHunter
             Console.WriteLine("You slowly gain consciousness and your blurred vision starts to focus as you groggily look around. You see dead crew members strewn about the room.\nSparks fly from various consoles. The ringing in your ears starts to lessen and is replaced by the ship's AI repeating -\n");
             Console.ReadKey();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Typewrite("\"Ship is in critical condition. Hostile life forms on board. Please head to the escape pods.\"");
+            Typewrite("\"Ship is in critical condition. Hostile life forms on board. Please head to the escape pods.\"\n");
             Console.ResetColor();
-            Console.WriteLine("------------------------------------------------------\n");
+            Console.WriteLine("================================================================================\n");
 
             // NOTE Think of a better scenario to ask name.
             Player.GetPlayerName();
@@ -80,13 +82,13 @@ namespace TreasureHunter
             doctor.AltDescription = "You check the doctor again. There's nothing you can do for her. You hear an explosion nearby. You have to get to the escape pods!";
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Escape Port, check the Engineering room, or go back to the Cafeteria.");
             // NOTE Maybe add the losing scenario in the Engineering Room. Add alien encounter.
-            Boundary engineering = new Boundary("Engineering", "You enter the Engineering room and see an Anti-Matter Torch in the hands of a dead crew member.");
+            Boundary engineering = new Boundary("Engineering", "You enter the Engineering room and see a splicer in the hands of a dead crew member.");
             // NOTE Still want to add an alien encounter in the Port.
             Boundary port = new Boundary("Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
-            port.AltDescription = "You use the torch to cut through the entry, pull the doors apart, and fall into the Escape Port. You rush to an escape pod, jump in, and hit the launch sequence.\nThe pod blasts through the open hatch and sends you to a safe distance. You watch the once mighty ship, The Venator, explode as you head towards the nearest planet. Alone...";
-            // Boundary hololift = new Boundary("Hololift", "Used to move to different levels of the ship.");
+            port.AltDescription = "You use the splicer to cut through the entry, pull the doors apart, and fall into the Escape Port. You rush to an escape pod, jump in, and hit the launch sequence.\nThe pod blasts through the open hatch and sends you to a safe distance. You watch the once mighty ship, The Venator, explode as you head towards the nearest planet. Alone...";
+            Boundary hololift = new Boundary("Hololift", "You run to the hololift and hit the button to open the door. The doors open and you instantly get sucked out into the cold void of space. The vacuum of space sucks the scream out of your lungs as you see the enemy Warpmancer ship continue to fire at your ship. Your vision starts to blur and fade as the void embraces you into its fold.");
 
-            Item torch = new Item("Torch", "Used to splice tools or cut through heavy metals.");
+            Item splicer = new Item("Splicer", "Used to splice tools or cut through heavy metals.");
             Item nylocloth = new Item("Nylocloth", "Durable yet flexible material. Used often for clothing.");
             Item chlorogen = new Item("Chlorogen", "Extremely potent anesthesia. Most commonly used in medical procedures. Use caution due to potency.");
             Item eek = new Item("Equalizer", "Rapid-firing blaster. Nicknamed 'Eek' due to the high-pitched 'Eee' sound it makes when you hold down the trigger.");
@@ -95,8 +97,9 @@ namespace TreasureHunter
             cafeteria.AddNeighborBoundary(doctor);
             hallway.AddNeighborBoundary(engineering);
             hallway.AddNeighborBoundary(port);
+            hallway.AddNeighborBoundary(hololift);
 
-            engineering.Items.Add(torch);
+            engineering.Items.Add(splicer);
             doctor.Items.Add(nylocloth);
             doctor.Items.Add(chlorogen);
 
@@ -190,7 +193,7 @@ namespace TreasureHunter
         public void ChangeLocation(string locationName)
         {
             // TODO  Need to handle Cafeteria and Doctor backtracking story. Use AltDescription. Look into IsLosable prop for Boundary.
-            IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
+            IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "splicer");
             if (Player.Inventory.Contains(portItem) && locationName == "Port")
             {
                 Location = Location.NeighborBoundaries[locationName];
@@ -199,6 +202,17 @@ namespace TreasureHunter
                 Console.ReadKey();
                 Replay();
                 return;
+            }
+
+            if (locationName == "Hololift")
+            {
+                Location = Location.NeighborBoundaries[locationName];
+                Console.Clear();
+                Console.WriteLine("================================================================================\n");
+                Console.WriteLine($"{Location.Description}\n");
+                Console.WriteLine("================================================================================\n");
+                Console.ReadKey();
+                Replay();
             }
 
             if (locationName == "")

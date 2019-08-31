@@ -57,9 +57,7 @@ namespace TreasureHunter
             // Typewrite("WAKE UP!! GET UP!!! ");
             // Typewrite("GET ON YOUR FEET NOW!!!\n");
             Console.WriteLine("================================================================================\n");
-            Console.WriteLine("You slowly gain consciousness and your blurred vision starts to focus as you groggily look around. You see dead crew members strewn about the room.");
-            Console.WriteLine("Sparks fly from various consoles.");
-            Console.WriteLine("The ringing in your ears starts to lessen and is replaced by the ship's AI repeating -\n");
+            Console.WriteLine("You slowly gain consciousness and your blurred vision starts to focus as you groggily look around. You see dead crew members strewn about the room.\nSparks fly from various consoles. The ringing in your ears starts to lessen and is replaced by the ship's AI repeating -\n");
             Console.ReadKey();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Typewrite("\"Ship is in critical condition. Hostile life forms on board. Please head to the escape pods.\"");
@@ -77,7 +75,10 @@ namespace TreasureHunter
             Player.Inventory.Clear();
 
             // NOTE Implement others after you finish requirements.
-            Boundary cafeteria = new Boundary("Cafeteria", "You woke up in the cafeteria. There are dead crew members strewn about the room.\nYou see the entry to the hallway.");
+            Boundary cafeteria = new Boundary("Cafeteria", "Your adrenaline kicks in and you jolt up. Taking a quick assesment of the room you see the entry to the hallway. By the entrance you see the ship's doctor motionless under debris.");
+            cafeteria.AltDescription = "You do another scan of the cafeteria. There's nothing else here for you. You hear an explosion nearby. You have to get to the escape pods!";
+            Boundary doctor = new Boundary("Doctor", "You rush to the doctor and check her pulse. Nothing. You start to tear at the debris on top of her to attempt CPR but discover she's been impaled as you lift the last piece of debris. In both her hands you notice some nylocloth and a vial of chlorogen. Her failed attempt to alleviate the pain.");
+            doctor.AltDescription = "You check the doctor again. There's nothing you can do for her. You hear an explosion nearby. You have to get to the escape pods!";
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Escape Port, check the Engineering room, or go back to the Cafeteria.");
             Boundary engineering = new Boundary("Engineering", "You enter the Engineering room and see an Anti-Matter Torch in the hands of a dead crew member.");
             Boundary port = new Boundary("Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
@@ -86,18 +87,17 @@ namespace TreasureHunter
 
             Item torch = new Item("Torch", "Used to splice tools or cut through heavy metals.");
             Item nylocloth = new Item("Nylocloth", "Durable yet flexible material. Used often for clothing.");
-            // Item chlorogen = new Item("Chlorogen", "Extremely potent anesthesia. Most commonly used in medical procedures. Use caution due to potency.");
+            Item chlorogen = new Item("Chlorogen", "Extremely potent anesthesia. Most commonly used in medical procedures. Use caution due to potency.");
             Item eek = new Item("Equalizer", "Rapid-firing blaster. Nicknamed 'Eek' due to the high-pitched 'Eee' sound it makes when you hold down the trigger.");
 
             cafeteria.AddNeighborBoundary(hallway);
+            cafeteria.AddNeighborBoundary(doctor);
             hallway.AddNeighborBoundary(engineering);
             hallway.AddNeighborBoundary(port);
 
             engineering.Items.Add(torch);
-
-            // NOTE Take these out when done testing.
-            Player.Inventory.Add(nylocloth);
-            // Player.Inventory.Add(eek);
+            doctor.Items.Add(nylocloth);
+            doctor.Items.Add(chlorogen);
 
             Location = cafeteria;
         }
@@ -168,8 +168,9 @@ namespace TreasureHunter
 
         public void ChangeLocation(string locationName)
         {
-            IItem targetItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
-            if (Player.Inventory.Contains(targetItem) && locationName == "Port")
+            // IItem doctorItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
+            IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "torch");
+            if (Player.Inventory.Contains(portItem) && locationName == "Port")
             {
                 Location = Location.NeighborBoundaries[locationName];
                 Console.Clear();
@@ -196,14 +197,14 @@ namespace TreasureHunter
         {
             Console.WriteLine("");
             Console.WriteLine($"Thanks for playing {Player.Name}! Would you like to play again? Y/N");
-            string playAgain = Console.ReadLine().ToLower();
-            if (playAgain == "y")
+            string playAgain = Console.ReadLine().ToUpper();
+            if (playAgain == "Y")
             {
                 Console.Clear();
                 Setup();
                 Run();
             }
-            if (playAgain == "n")
+            if (playAgain == "N")
             {
                 Playing = false;
             }

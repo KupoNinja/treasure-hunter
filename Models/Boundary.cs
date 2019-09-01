@@ -10,6 +10,7 @@ namespace TreasureHunter.Models
         public string Description { get; set; }
         public string AltDescription { get; set; }
         public List<IItem> Items { get; set; }
+        public List<Event> Events { get; set; }
         public Dictionary<string, IBoundary> NeighborBoundaries { get; set; }
 
         public void AddNeighborBoundary(IBoundary neighbor, bool autoAdd = true)
@@ -43,6 +44,7 @@ namespace TreasureHunter.Models
             Description = description;
             AltDescription = "";
             Items = new List<IItem>();
+            Events = new List<Event>();
             NeighborBoundaries = new Dictionary<string, IBoundary>();
         }
     }

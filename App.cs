@@ -84,7 +84,7 @@ namespace TreasureHunter
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Port for the escape pods, try the Hololift to find a different Port at another level, check the Engineering room, or go back to the Cafeteria.");
 
             // NOTE Maybe add the losing scenario in the Engineering Room. Add alien encounter.
-            Boundary engineering = new Boundary("Engineering", "You reach the Engineering room and the entryway is open. The door panel sparking and smoking from fresh blaster marks.\nYou peer into the room and see a Warpmancer soldier rummaging through the different compartments. He throws tools and parts over his shoulder as he looks for something specific to loot.\nYou notice one of the tools he's discarded is a splicer. You sneak into the room and hide behind some alloy crates continuing to watch the Warpmancer.\nYou hear 3 quick, sharp pings and the Warpmancer perks up and rushes back out the door.");
+            Boundary engineering = new Boundary("Engineering", "You reach the Engineering room and the entryway is already open. The door panel sparks and emits smoke from fresh blaster marks.\nPeering into the room and see a Warpmancer soldier rummaging through the different compartments. He throws tools and parts over his shoulder as he looks for something specific to loot.\nYou notice one of the tools he's discarded is a splicer. You sneak into the room and hide behind some alloy crates continuing to watch the Warpmancer.\n3 quick, sharp pings sound off and the Warpmancer perks up and rushes back out the door.");
 
             // NOTE Still want to add an alien encounter in the Port.
             Boundary port = new Boundary("Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
@@ -321,7 +321,7 @@ namespace TreasureHunter
                 Console.WriteLine($"{Location.Description}\n");
             }
             Console.WriteLine("================================================================================\n");
-            // Console.WriteLine("------------------------------------------------------\n");
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"You can 'go' to these locations:");
             Location.DisplayNeighborBoundaries();
             Console.WriteLine("");
@@ -331,6 +331,7 @@ namespace TreasureHunter
                 Location.DisplayLocationItems();
                 Console.WriteLine("");
             }
+            Console.ResetColor();
             Console.WriteLine("------------------------------------------------------\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Press any key to go back.");

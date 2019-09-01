@@ -75,7 +75,6 @@ namespace TreasureHunter
         {
             Player.Inventory.Clear();
 
-            // NOTE Implement others after you finish requirements.
             Boundary cafeteria = new Boundary("Cafeteria", "Your adrenaline kicks in and you jolt up. Taking a quick assesment of the room you see the entry to the hallway. By the entrance you see the ship's doctor motionless under debris.");
             cafeteria.AltDescription = "You do another scan of the cafeteria. There's nothing else here for you. You hear an explosion nearby. You have to get to the escape pods!";
 
@@ -83,9 +82,9 @@ namespace TreasureHunter
             doctor.AltDescription = "You check the doctor again. There's nothing you can do for her. You hear an explosion nearby. You have to get to the escape pods!";
 
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Port for the escape pods, try the Hololift to find a different Port at another level, check the Engineering room, or go back to the Cafeteria.");
-            // NOTE Maybe add the losing scenario in the Engineering Room. Add alien encounter.
 
-            Boundary engineering = new Boundary("Engineering", "You reach the Engineering room and the entryway is open. The door panel sparking and smoking from fresh blaster marks.\nYou peer into the room and see a Warpmancer soldier rummaging through the different compartments. He throws tools and parts over his shoulder as he looks for something specific to loot.\nYou notice one of the tools he's discarded is a splicer. You sneak into the room and hide behind some alloy crates continuing to watch the Warpmancer. You hear 3 quick, sharp pings and the Warpmancer perks up and rushes back out the door.");
+            // NOTE Maybe add the losing scenario in the Engineering Room. Add alien encounter.
+            Boundary engineering = new Boundary("Engineering", "You reach the Engineering room and the entryway is open. The door panel sparking and smoking from fresh blaster marks.\nYou peer into the room and see a Warpmancer soldier rummaging through the different compartments. He throws tools and parts over his shoulder as he looks for something specific to loot.\nYou notice one of the tools he's discarded is a splicer. You sneak into the room and hide behind some alloy crates continuing to watch the Warpmancer.\nYou hear 3 quick, sharp pings and the Warpmancer perks up and rushes back out the door.");
 
             // NOTE Still want to add an alien encounter in the Port.
             Boundary port = new Boundary("Port", "You reach the Escape Port entry and frantically hit the button to open the door. No response. You try to pry the doors open with your fingers but they don't budge. If only you could cut through the door somehow.");
@@ -99,6 +98,7 @@ namespace TreasureHunter
             Item eek = new Item("Equalizer", "Rapid-firing blaster. Nicknamed 'Eek' due to the high-pitched 'Eee' sound it makes when you hold down the trigger.");
 
             cafeteria.AddNeighborBoundary(hallway);
+            // NOTE Take this out if using Event class
             cafeteria.AddNeighborBoundary(doctor);
             hallway.AddNeighborBoundary(engineering);
             hallway.AddNeighborBoundary(port);
@@ -123,7 +123,6 @@ namespace TreasureHunter
 
         public void CaptureUserInput()
         {
-            // NOTE Blows up if you just do a space and a blank line after hitting enter.
             Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine("Type 'help' to display list of commands.");
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -134,13 +133,13 @@ namespace TreasureHunter
             string command = words[0];
             string option = "";
 
-
             if (words.Length > 1)
             {
                 if (words[1] == "")
                 {
                     Console.WriteLine("Please enter the correct location or item.");
                     Console.ReadKey();
+                    Console.Clear();
                     return;
                 }
                 string firstLetter = words[1][0].ToString().ToUpper();
@@ -168,7 +167,10 @@ namespace TreasureHunter
                     Quit();
                     break;
                 default:
+                    Console.WriteLine("");
                     Console.WriteLine("Invalid option\n");
+                    Console.ReadKey();
+                    Console.Clear();
                     break;
             }
         }
@@ -176,7 +178,7 @@ namespace TreasureHunter
         public void Quit()
         {
             Console.Clear();
-            Console.WriteLine($"You curl up into the fetal position and start to sob uncontrollably as the deafening explosions continue around you.\nYou've heard of the cunning Warpmancers and their vastly advanced technology but your hubris as a young captain has led you and your crew to a ruthless fate.\nAt least you can go down in history as Captain {Player.Name}. The first man to experience how fast a dreadnought class ship could be turned into space dust.");
+            Console.WriteLine($"You curl up into the fetal position and start to sob uncontrollably as the deafening explosions continue around you.\nYou've heard of the cunning Warpmancers and their vastly advanced technology but your hubris as a young captain has led you and your crew to a ruthless fate.\nAt least you can go down in history as Captain {Player.Name} - The record holder for having the shortest term of service as a captain.\nOn the brightside you also hold the fastest record for transforming a dreadnought class ship into space dust.");
             Playing = false;
         }
 
@@ -244,12 +246,14 @@ namespace TreasureHunter
             Console.WriteLine("================================================================================\n");
             Console.WriteLine("Type the below commands to progress through the game.");
             Console.WriteLine("------------------------------------------------------\n");
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("'Look' - Displays room description.\n");
             Console.WriteLine("'Go <Location>' - Moves you to your desired location.\n");
             Console.WriteLine("'Take <ItemName>' - Adds the item to your inventory.\n");
             Console.WriteLine("'Inventory' - Displays a list of your inventory.\n");
             Console.WriteLine("'Help' - Displays the list of commands.\n");
             Console.WriteLine("'Quit' - Quits the game.\n");
+            Console.ResetColor();
             Console.WriteLine("------------------------------------------------------\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Press any key to go back.");
@@ -290,7 +294,7 @@ namespace TreasureHunter
             }
             Console.ResetColor();
             Console.WriteLine("");
-            // Console.WriteLine("================================================================================\n");
+            Console.WriteLine("================================================================================\n");
             Console.WriteLine("--------------------------------------------------------------------------------\n");
             // NOTE Can set to be able to use items later on.
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -305,10 +309,9 @@ namespace TreasureHunter
             Console.Clear();
             Console.WriteLine("================================================================================\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"You are at the {Location.Name}.");
+            Console.WriteLine($"You are at the {Location.Name}.\n");
             Console.ResetColor();
             Console.WriteLine("================================================================================\n");
-            Console.WriteLine("------------------------------------------------------\n");
             if (Location.Name == "Port")
             {
                 Console.WriteLine($"{Location.AltDescription}\n");
@@ -317,7 +320,8 @@ namespace TreasureHunter
             {
                 Console.WriteLine($"{Location.Description}\n");
             }
-            Console.WriteLine("------------------------------------------------------\n");
+            Console.WriteLine("================================================================================\n");
+            // Console.WriteLine("------------------------------------------------------\n");
             Console.WriteLine($"You can 'go' to these locations:");
             Location.DisplayNeighborBoundaries();
             Console.WriteLine("");
@@ -337,7 +341,6 @@ namespace TreasureHunter
 
         public void TakeItem(string item)
         {
-            // NOTE Error if user enters a space after using take option
             IItem targetItem = Location.Items.Find(i => i.Name.ToLower() == item.ToLower());
             if (targetItem is null)
             {

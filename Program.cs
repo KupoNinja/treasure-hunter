@@ -9,7 +9,6 @@ namespace TreasureHunter
             App app = new App();
             app.Setup();
             app.Run();
-            // app.DisplayHelpInfo();
         }
     }
 }

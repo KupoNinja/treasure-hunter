@@ -180,13 +180,15 @@ namespace TreasureHunter
         public void DisplayMenu()
         {
             Console.WriteLine("================================================================================\n");
-            if (Location.Events[0].IsTriggered)
+            // NOTE Breaks here... Index out of range. This doesn't look good...The or fixes for now.
+            // NOTE If backtracking it shows the event description.
+            if (!Location.Events.Any() || !Location.Events[0].IsTriggered)
             {
-                Console.WriteLine($"{Location.Events[0].Description}\n");
+                Console.WriteLine($"{Location.Description}\n");
             }
             else
             {
-                Console.WriteLine($"{Location.Description}\n");
+                Console.WriteLine($"{Location.Events[0].Description}\n");
             }
             Console.WriteLine("================================================================================\n");
             CaptureUserInput();
@@ -248,6 +250,7 @@ namespace TreasureHunter
             Console.WriteLine("");
             if (Location.Events.Any())
             {
+                // NOTE Need to hide this if event is triggered.
                 Location.DisplayLocationEvents();
                 Console.WriteLine("");
             }
@@ -326,6 +329,12 @@ namespace TreasureHunter
         public void ChangeLocation(string locationName)
         {
             // TODO  Need to handle Cafeteria and Doctor backtracking story. Use AltDescription. Look into IsLosable prop for Boundary.
+            // NOTE Can break here as well... Index out of range. This code block attempts to keep story continuity by changing room description to an alt description if an event is triggered.
+            // if (Location.Events[0].IsTriggered)
+            // {
+            //     Location.Description = Location.AltDescription;
+            // }
+
             IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "splicer");
             if (Player.Inventory.Contains(portItem) && locationName == "Port")
             {

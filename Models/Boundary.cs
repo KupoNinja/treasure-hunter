@@ -34,14 +34,15 @@ namespace TreasureHunter.Models
         public void DisplayLocationItems()
         {
             // NOTE Take out this if statement if doing events as boundaries
-            if (Events[0].IsTriggered)
+            // NOTE Breaks here if attempting to 'look' in a room with no events.
+            // if (Events[0].IsTriggered)
+            // {
+            Console.WriteLine("You can 'take' these items:");
+            foreach (var item in Items)
             {
-                Console.WriteLine("You can 'take' these items:");
-                foreach (var item in Items)
-                {
-                    Console.WriteLine(item.Name);
-                }
+                Console.WriteLine(item.Name);
             }
+            // }
             return;
         }
 

@@ -24,6 +24,7 @@ namespace TreasureHunter.Models
 
         public void DisplayNeighborBoundaries()
         {
+            Console.WriteLine("You can 'go' to these locations:");
             foreach (var kvp in NeighborBoundaries)
             {
                 Console.WriteLine(kvp.Key);
@@ -32,9 +33,24 @@ namespace TreasureHunter.Models
 
         public void DisplayLocationItems()
         {
-            foreach (var item in Items)
+            // NOTE Take out this if statement if doing events as boundaries
+            if (Events[0].IsTriggered)
             {
-                Console.WriteLine(item.Name);
+                Console.WriteLine("You can 'take' these items:");
+                foreach (var item in Items)
+                {
+                    Console.WriteLine(item.Name);
+                }
+            }
+            return;
+        }
+
+        public void DisplayLocationEvents()
+        {
+            Console.WriteLine("You can 'check' these events");
+            foreach (var ev in Events)
+            {
+                Console.WriteLine(ev.Name);
             }
         }
 

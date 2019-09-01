@@ -78,8 +78,8 @@ namespace TreasureHunter
             Boundary cafeteria = new Boundary("Cafeteria", "Your adrenaline kicks in and you jolt up. Taking a quick assesment of the room you see the entry to the hallway. By the entrance you see the ship's doctor motionless under debris.");
             cafeteria.AltDescription = "You do another scan of the cafeteria. There's nothing else here for you. You hear an explosion nearby. You have to get to the escape pods!";
 
-            Boundary doctor = new Boundary("Doctor", "You rush to the doctor and check her pulse. Nothing. You start to tear at the debris on top of her to attempt CPR but discover she's been impaled as you lift the last piece of debris.\nIn both her hands you notice some nylocloth and a vial of chlorogen. Her failed attempt to alleviate the pain.");
-            doctor.AltDescription = "You check the doctor again. There's nothing you can do for her. You hear an explosion nearby. You have to get to the escape pods!";
+            // Boundary doctor = new Boundary("Doctor", "You rush to the doctor and check her pulse. Nothing. You start to tear at the debris on top of her to attempt CPR but discover she's been impaled as you lift the last piece of debris.\nIn both her hands you notice some nylocloth and a vial of chlorogen. Her failed attempt to alleviate the pain.");
+            // doctor.AltDescription = "You check the doctor again. There's nothing you can do for her. You hear an explosion nearby. You have to get to the escape pods!";
 
             Boundary hallway = new Boundary("Hallway", "You burst into the hallway. You can run directly to the Port for the escape pods, try the Hololift to find a different Port at another level, check the Engineering room, or go back to the Cafeteria.");
 
@@ -92,6 +92,8 @@ namespace TreasureHunter
 
             Boundary hololift = new Boundary("Hololift", "You run to the hololift and hit the button to open the door. The doors open and you instantly get sucked out into the cold void of space. The vacuum of space sucks the scream out of your lungs as you see the enemy Warpmancer ship continue to fire at your ship. Your vision starts to blur and fade as the void embraces you into its fold.");
 
+            Event doctor = new Event("Doctor", "You rush to the doctor and check her pulse. Nothing. You start to tear at the debris on top of her to attempt CPR but discover she's been impaled as you lift the last piece of debris.\nIn both her hands you notice some nylocloth and a vial of chlorogen. Her failed attempt to alleviate the pain.");
+
             Item splicer = new Item("Splicer", "Used to splice tools or cut through heavy metals.");
             Item nylocloth = new Item("Nylocloth", "Durable yet flexible material. Used often for clothing.");
             Item chlorogen = new Item("Chlorogen", "Extremely potent anesthesia. Most commonly used in medical procedures. Use caution due to potency.");
@@ -99,14 +101,17 @@ namespace TreasureHunter
 
             cafeteria.AddNeighborBoundary(hallway);
             // NOTE Take this out if using Event class
-            cafeteria.AddNeighborBoundary(doctor);
+            // cafeteria.AddNeighborBoundary(doctor);
             hallway.AddNeighborBoundary(engineering);
             hallway.AddNeighborBoundary(port);
             hallway.AddNeighborBoundary(hololift);
 
+            cafeteria.Events.Add(doctor);
+
             engineering.Items.Add(splicer);
-            doctor.Items.Add(nylocloth);
-            doctor.Items.Add(chlorogen);
+            // NOTE Change these back to doctor if going back to doing events as boundaries
+            cafeteria.Items.Add(nylocloth);
+            cafeteria.Items.Add(chlorogen);
 
             Location = cafeteria;
         }
@@ -118,60 +123,6 @@ namespace TreasureHunter
             while (Playing)
             {
                 DisplayMenu();
-            }
-        }
-
-        public void CaptureUserInput()
-        {
-            Console.WriteLine("------------------------------------------------------\n");
-            Console.WriteLine("Type 'help' to display list of commands.");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("What do you do: ");
-            Console.ResetColor();
-            string userInput = Console.ReadLine().ToLower();
-            string[] words = userInput.Split(' ');
-            string command = words[0];
-            string option = "";
-
-            if (words.Length > 1)
-            {
-                if (words[1] == "")
-                {
-                    Console.WriteLine("Please enter the correct location or item.");
-                    Console.ReadKey();
-                    Console.Clear();
-                    return;
-                }
-                string firstLetter = words[1][0].ToString().ToUpper();
-                option = firstLetter + words[1].Substring(1);
-            }
-            switch (command)
-            {
-                case "look":
-                    DisplayRoomDescription();
-                    break;
-                case "go":
-                    ChangeLocation(option);
-                    Console.Clear();
-                    break;
-                case "take":
-                    TakeItem(option);
-                    break;
-                case "inventory":
-                    DisplayPlayerInventory();
-                    break;
-                case "help":
-                    DisplayHelpInfo();
-                    break;
-                case "quit":
-                    Quit();
-                    break;
-                default:
-                    Console.WriteLine("");
-                    Console.WriteLine("Invalid option\n");
-                    Console.ReadKey();
-                    Console.Clear();
-                    break;
             }
         }
 
@@ -199,43 +150,6 @@ namespace TreasureHunter
             }
         }
 
-        public void ChangeLocation(string locationName)
-        {
-            // TODO  Need to handle Cafeteria and Doctor backtracking story. Use AltDescription. Look into IsLosable prop for Boundary.
-            IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "splicer");
-            if (Player.Inventory.Contains(portItem) && locationName == "Port")
-            {
-                Location = Location.NeighborBoundaries[locationName];
-                Console.Clear();
-                Console.WriteLine(Location.AltDescription);
-                Console.ReadKey();
-                Replay();
-                return;
-            }
-
-            if (locationName == "Hololift")
-            {
-                Location = Location.NeighborBoundaries[locationName];
-                Console.Clear();
-                Console.WriteLine("================================================================================\n");
-                Console.WriteLine($"{Location.Description}\n");
-                Console.WriteLine("================================================================================\n");
-                Console.ReadKey();
-                Replay();
-            }
-
-            if (locationName == "")
-            {
-                Console.WriteLine("Please enter the correct location.\n");
-            }
-            if (Location.NeighborBoundaries.ContainsKey(locationName))
-            {
-                Location = Location.NeighborBoundaries[locationName];
-                // Console.ReadKey();
-                // Console.Clear();
-            }
-        }
-
         public void DisplayHelpInfo()
         {
             Console.Clear();
@@ -249,6 +163,7 @@ namespace TreasureHunter
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("'Look' - Displays room description.\n");
             Console.WriteLine("'Go <Location>' - Moves you to your desired location.\n");
+            Console.WriteLine("'Check <Event>' - Triggers an event. May unlock access to items.\n");
             Console.WriteLine("'Take <ItemName>' - Adds the item to your inventory.\n");
             Console.WriteLine("'Inventory' - Displays a list of your inventory.\n");
             Console.WriteLine("'Help' - Displays the list of commands.\n");
@@ -265,7 +180,14 @@ namespace TreasureHunter
         public void DisplayMenu()
         {
             Console.WriteLine("================================================================================\n");
-            Console.WriteLine($"{Location.Description}\n");
+            if (Location.Events[0].IsTriggered)
+            {
+                Console.WriteLine($"{Location.Events[0].Description}\n");
+            }
+            else
+            {
+                Console.WriteLine($"{Location.Description}\n");
+            }
             Console.WriteLine("================================================================================\n");
             CaptureUserInput();
             return;
@@ -322,12 +244,15 @@ namespace TreasureHunter
             }
             Console.WriteLine("================================================================================\n");
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($"You can 'go' to these locations:");
             Location.DisplayNeighborBoundaries();
             Console.WriteLine("");
+            if (Location.Events.Any())
+            {
+                Location.DisplayLocationEvents();
+                Console.WriteLine("");
+            }
             if (Location.Items.Any())
             {
-                Console.WriteLine($"You can 'take' these items:");
                 Location.DisplayLocationItems();
                 Console.WriteLine("");
             }
@@ -339,6 +264,120 @@ namespace TreasureHunter
             Console.ReadKey();
             Console.Clear();
         }
+
+        public void CaptureUserInput()
+        {
+            Console.WriteLine("------------------------------------------------------\n");
+            Console.WriteLine("Type 'help' to display list of commands.");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("What do you do: ");
+            Console.ResetColor();
+            string userInput = Console.ReadLine().ToLower();
+            string[] words = userInput.Split(' ');
+            string command = words[0];
+            string option = "";
+
+            if (words.Length > 1)
+            {
+                if (words[1] == "")
+                {
+                    Console.WriteLine("Please enter the correct location, event, or item.");
+                    Console.ReadKey();
+                    Console.Clear();
+                    return;
+                }
+                string firstLetter = words[1][0].ToString().ToUpper();
+                option = firstLetter + words[1].Substring(1);
+            }
+            switch (command)
+            {
+                case "look":
+                    DisplayRoomDescription();
+                    break;
+                case "go":
+                    ChangeLocation(option);
+                    Console.Clear();
+                    break;
+                case "check":
+                    CheckEvent(option);
+                    Console.Clear();
+                    break;
+                case "take":
+                    TakeItem(option);
+                    break;
+                case "inventory":
+                    DisplayPlayerInventory();
+                    break;
+                case "help":
+                    DisplayHelpInfo();
+                    break;
+                case "quit":
+                    Quit();
+                    break;
+                default:
+                    Console.WriteLine("");
+                    Console.WriteLine("Invalid option\n");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+            }
+        }
+
+        public void ChangeLocation(string locationName)
+        {
+            // TODO  Need to handle Cafeteria and Doctor backtracking story. Use AltDescription. Look into IsLosable prop for Boundary.
+            IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "splicer");
+            if (Player.Inventory.Contains(portItem) && locationName == "Port")
+            {
+                Location = Location.NeighborBoundaries[locationName];
+                Console.Clear();
+                Console.WriteLine(Location.AltDescription);
+                Console.ReadKey();
+                Replay();
+                return;
+            }
+
+            if (locationName == "Hololift")
+            {
+                Location = Location.NeighborBoundaries[locationName];
+                Console.Clear();
+                Console.WriteLine("================================================================================\n");
+                Console.WriteLine($"{Location.Description}\n");
+                Console.WriteLine("================================================================================\n");
+                Console.ReadKey();
+                Replay();
+            }
+
+            if (locationName == "")
+            {
+                Console.WriteLine("Please enter the correct location.\n");
+            }
+            if (Location.NeighborBoundaries.ContainsKey(locationName))
+            {
+                Location = Location.NeighborBoundaries[locationName];
+                // Console.ReadKey();
+                // Console.Clear();
+            }
+        }
+
+        public void CheckEvent(string eventName)
+        {
+            if (Location.Events.Any())
+            {
+                Console.Clear();
+                Location.Events[0].IsTriggered = true;
+                Console.WriteLine("================================================================================\n");
+                Console.WriteLine($"{Location.Events[0].Description}\n");
+                Console.WriteLine("================================================================================\n");
+                CaptureUserInput();
+            }
+            else
+            {
+                Console.WriteLine("There are no events to trigger here.");
+                return;
+            }
+        }
+
 
         public void TakeItem(string item)
         {
@@ -354,6 +393,7 @@ namespace TreasureHunter
                 Player.Inventory.Add(targetItem);
                 Console.WriteLine($"You acquired {targetItem.Name}!");
                 Console.ReadKey();
+                Location.Items.Remove(targetItem);
                 Console.Clear();
             }
         }

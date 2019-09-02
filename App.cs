@@ -182,13 +182,20 @@ namespace TreasureHunter
             Console.WriteLine("================================================================================\n");
             // NOTE Breaks here... Index out of range. This doesn't look good...The or fixes for now.
             // NOTE If backtracking it shows the event description.
-            if (!Location.Events.Any() || !Location.Events[0].IsTriggered)
+            if (Location.Events.Any())
             {
-                Console.WriteLine($"{Location.Description}\n");
+                if (Location.Events[0].IsTriggered)
+                {
+                    Console.WriteLine($"{Location.Events[0].Description}\n");
+                }
+                else
+                {
+                    Console.WriteLine($"{Location.Description}\n");
+                }
             }
             else
             {
-                Console.WriteLine($"{Location.Events[0].Description}\n");
+                Console.WriteLine($"{Location.Description}\n");
             }
             Console.WriteLine("================================================================================\n");
             CaptureUserInput();
@@ -361,18 +368,25 @@ namespace TreasureHunter
 
             if (locationName == "")
             {
-                Console.WriteLine("Please enter the correct location.\n");
+                Console.WriteLine("Please enter a location.\n");
+                Console.ReadKey();
+                Console.Clear();
             }
             if (Location.NeighborBoundaries.ContainsKey(locationName))
             {
                 Location = Location.NeighborBoundaries[locationName];
-                // Console.ReadKey();
-                // Console.Clear();
             }
         }
 
+        // NOTE This executes if player just types in 'check' and nothing else
         public void CheckEvent(string eventName)
         {
+            if (eventName == "")
+            {
+                Console.WriteLine("Please enter an event.\n");
+                Console.ReadKey();
+                Console.Clear();
+            }
             if (Location.Events.Any())
             {
                 Console.Clear();
@@ -385,6 +399,8 @@ namespace TreasureHunter
             else
             {
                 Console.WriteLine("There are no events to trigger here.");
+                Console.ReadKey();
+                Console.Clear();
                 return;
             }
         }
@@ -396,9 +412,10 @@ namespace TreasureHunter
             if (targetItem is null)
             {
                 Console.WriteLine("This item doesn't exist.");
+                Console.ReadKey();
+                Console.Clear();
                 return;
             }
-
             if (Location.Items.Contains(targetItem))
             {
                 Player.Inventory.Add(targetItem);

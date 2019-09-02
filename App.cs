@@ -59,10 +59,10 @@ namespace TreasureHunter
             // Typewrite("WAKE UP!! GET UP!!! ");
             // Typewrite("GET ON YOUR FEET NOW!!!\n");
             Console.WriteLine("================================================================================\n");
-            Console.WriteLine("You slowly gain consciousness and your blurred vision starts to focus as you groggily look around. You see dead crew members strewn about the room.\nSparks fly from various consoles. The ringing in your ears starts to lessen and is replaced by the ship's AI repeating -\n");
+            Console.WriteLine("You slowly gain consciousness and your blurred vision starts to focus as you groggily look around. You see dead crew members strewn about the room.\nA fire grows and spreads from one corner of the room as sparks fly from various consoles. The ringing in your ears starts to lessen and is replaced by the ship's AI repeating -\n");
             Console.ReadKey();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Typewrite("\"Ship is in critical condition. Hostile life forms on board. Please head to the escape pods.\"\n");
+            Typewrite("\"Ship is in critical condition. Hostile life forms on board. Please locate the nearest escape pods.\"\n");
             Console.ResetColor();
             Console.WriteLine("================================================================================\n");
 
@@ -197,8 +197,7 @@ namespace TreasureHunter
 
         public void DisplayPlayerInventory()
         {
-            // NOTE Bummer... Really want to use this...
-            // Player.Inventory.ForEach(Console.WriteLine);
+            // NOTE Can set to be able to use items later on.
             Console.Clear();
             Console.WriteLine("================================================================================\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -220,7 +219,6 @@ namespace TreasureHunter
             Console.WriteLine("");
             Console.WriteLine("================================================================================\n");
             Console.WriteLine("--------------------------------------------------------------------------------\n");
-            // NOTE Can set to be able to use items later on.
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Press any key to go back.");
             Console.ResetColor();
@@ -329,11 +327,15 @@ namespace TreasureHunter
         public void ChangeLocation(string locationName)
         {
             // TODO  Need to handle Cafeteria and Doctor backtracking story. Use AltDescription. Look into IsLosable prop for Boundary.
-            // NOTE Can break here as well... Index out of range. This code block attempts to keep story continuity by changing room description to an alt description if an event is triggered.
-            // if (Location.Events[0].IsTriggered)
-            // {
-            //     Location.Description = Location.AltDescription;
-            // }
+            // NOTE Can break here as well... Index out of range. This code block attempts to keep story continuity by changing room description to an alt description if an event is triggered. 
+            // Think this is fixed now. Still need to show location description instead of event description when backtracking.
+            if (Location.Events.Any())
+            {
+                if (Location.Events[0].IsTriggered)
+                {
+                    Location.Description = Location.AltDescription;
+                }
+            }
 
             IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "splicer");
             if (Player.Inventory.Contains(portItem) && locationName == "Port")

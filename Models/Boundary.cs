@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TreasureHunter.Interfaces;
 
 namespace TreasureHunter.Models
@@ -34,15 +35,18 @@ namespace TreasureHunter.Models
         public void DisplayLocationItems()
         {
             // NOTE Take out this if statement if doing events as boundaries
-            // NOTE Breaks here if attempting to 'look' in a room with no events.
-            // if (Events[0].IsTriggered)
-            // {
-            Console.WriteLine("You can 'take' these items:");
-            foreach (var item in Items)
+            // NOTE This breaks when a room has no events but has items. Fixed with first if statement. Redundant if a room has an event.
+            if (Events.Any())
             {
-                Console.WriteLine(item.Name);
+                if (Events[0].IsTriggered)
+                {
+                    Console.WriteLine("You can 'take' these items:");
+                    foreach (var item in Items)
+                    {
+                        Console.WriteLine(item.Name);
+                    }
+                }
             }
-            // }
             return;
         }
 

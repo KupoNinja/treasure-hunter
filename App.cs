@@ -137,16 +137,19 @@ namespace TreasureHunter
         {
             Console.WriteLine("");
             Console.WriteLine($"Thanks for playing {Player.Name}! Would you like to play again? Y/N");
-            string playAgain = Console.ReadLine().ToUpper();
-            if (playAgain == "Y")
+            switch (Console.ReadLine().ToUpper())
             {
-                Console.Clear();
-                Setup();
-                Run();
-            }
-            if (playAgain == "N")
-            {
-                Playing = false;
+                case "Y":
+                    Console.Clear();
+                    Setup();
+                    Run();
+                    break;
+                case "N":
+                    Playing = false;
+                    break;
+                default:
+                    Playing = false;
+                    break;
             }
         }
 
@@ -180,8 +183,13 @@ namespace TreasureHunter
         public void DisplayMenu()
         {
             Console.WriteLine("================================================================================\n");
-            // NOTE Breaks here... Index out of range. This doesn't look good...The or fixes for now.
-            // NOTE If backtracking it shows the event description.
+            // if (Location.Description == Location.AltDescription)
+            // {
+            //     Console.WriteLine($"{Location.Description}\n");
+            // }
+
+            // NOTE Breaks here... Index out of range.
+            // NOTE If backtracking it shows the event description instead of alt.
             if (Location.Events.Any())
             {
                 if (Location.Events[0].IsTriggered)
@@ -241,14 +249,15 @@ namespace TreasureHunter
             Console.WriteLine($"You are at the {Location.Name}.\n");
             Console.ResetColor();
             Console.WriteLine("================================================================================\n");
-            if (Location.Name == "Port")
-            {
-                Console.WriteLine($"{Location.AltDescription}\n");
-            }
-            else
-            {
-                Console.WriteLine($"{Location.Description}\n");
-            }
+            // NOTE Would show ending if using 'look' even without splicer.
+            // if (Location.Name == "Port")
+            // {
+            //     Console.WriteLine($"{Location.AltDescription}\n");
+            // }
+            // else
+            // {
+            Console.WriteLine($"{Location.Description}\n");
+            // }
             Console.WriteLine("================================================================================\n");
             Console.ForegroundColor = ConsoleColor.Magenta;
             Location.DisplayNeighborBoundaries();
@@ -261,8 +270,15 @@ namespace TreasureHunter
             }
             if (Location.Items.Any())
             {
-                Location.DisplayLocationItems();
-                Console.WriteLine("");
+                if (Location.Events.Any() && Location.Events[0].IsTriggered == false)
+                {
+                    // return;
+                }
+                else
+                {
+                    Location.DisplayLocationItems();
+                    Console.WriteLine("");
+                }
             }
             Console.ResetColor();
             Console.WriteLine("------------------------------------------------------\n");
@@ -333,20 +349,16 @@ namespace TreasureHunter
 
         public void ChangeLocation(string locationName)
         {
-            // TODO  Need to handle Cafeteria and Doctor backtracking story. Use AltDescription. Look into IsLosable prop for Boundary.
-            // NOTE Can break here as well... Index out of range. This code block attempts to keep story continuity by changing room description to an alt description if an event is triggered. 
-            // Think this is fixed now. Still need to show location description instead of event description when backtracking.
-            if (Location.Events.Any())
+            if (locationName == "")
             {
-                if (Location.Events[0].IsTriggered)
-                {
-                    Location.Description = Location.AltDescription;
-                }
+                Console.WriteLine("Please enter a location.\n");
+                Console.ReadKey();
+                Console.Clear();
             }
-
             IItem portItem = Player.Inventory.Find(i => i.Name.ToLower() == "splicer");
             if (Player.Inventory.Contains(portItem) && locationName == "Port")
             {
+                // NOTE Blows up here if player has splicer, types 'go port', but the port is not a neighboring location.
                 Location = Location.NeighborBoundaries[locationName];
                 Console.Clear();
                 Console.WriteLine(Location.AltDescription);
@@ -354,7 +366,6 @@ namespace TreasureHunter
                 Replay();
                 return;
             }
-
             if (locationName == "Hololift")
             {
                 Location = Location.NeighborBoundaries[locationName];
@@ -365,36 +376,32 @@ namespace TreasureHunter
                 Console.ReadKey();
                 Replay();
             }
-
-            if (locationName == "")
-            {
-                Console.WriteLine("Please enter a location.\n");
-                Console.ReadKey();
-                Console.Clear();
-            }
             if (Location.NeighborBoundaries.ContainsKey(locationName))
             {
                 Location = Location.NeighborBoundaries[locationName];
             }
         }
 
-        // NOTE This executes if player just types in 'check' and nothing else
         public void CheckEvent(string eventName)
         {
-            if (eventName == "")
+            if (eventName == "" || eventName != Location.Events[0].Name)
             {
                 Console.WriteLine("Please enter an event.\n");
                 Console.ReadKey();
                 Console.Clear();
+                return;
             }
-            if (Location.Events.Any())
+            if (Location.Events.Any() && eventName == Location.Events[0].Name)
             {
                 Console.Clear();
                 Location.Events[0].IsTriggered = true;
-                Console.WriteLine("================================================================================\n");
-                Console.WriteLine($"{Location.Events[0].Description}\n");
-                Console.WriteLine("================================================================================\n");
-                CaptureUserInput();
+                Location.Description = Location.AltDescription;
+                // NOTE Can still see event even after taking all the items.
+                // if (!Location.Items.Any())
+                // {
+                //     Event removedEvent = Location.Events.Find(e => e.Name.ToLower() == eventName.ToLower()); ;
+                //     Location.Events.Remove(removedEvent);
+                // }
             }
             else
             {

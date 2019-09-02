@@ -11,6 +11,7 @@ namespace TreasureHunter.Models
         public string Description { get; set; }
         public string AltDescription { get; set; }
         public List<IItem> Items { get; set; }
+        // NOTE Not a big fan of using the List but can handle multiple events in the future.
         public List<Event> Events { get; set; }
         public Dictionary<string, IBoundary> NeighborBoundaries { get; set; }
 
@@ -36,18 +37,12 @@ namespace TreasureHunter.Models
         {
             // NOTE Take out this if statement if doing events as boundaries
             // NOTE This breaks when a room has no events but has items. Fixed with first if statement. Redundant if a room has an event.
-            if (Events.Any())
+            // NOTE Now this doesn't display items if the room doesn't have an event.
+            Console.WriteLine("You can 'take' these items:");
+            foreach (var item in Items)
             {
-                if (Events[0].IsTriggered)
-                {
-                    Console.WriteLine("You can 'take' these items:");
-                    foreach (var item in Items)
-                    {
-                        Console.WriteLine(item.Name);
-                    }
-                }
+                Console.WriteLine(item.Name);
             }
-            return;
         }
 
         public void DisplayLocationEvents()
